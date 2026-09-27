@@ -1,0 +1,19 @@
+# Dependency untuk DEVELOPMENT DESKTOP (Windows/Linux), dipakai
+# untuk testing sebelum build APK dengan Buildozer.
+#
+# kivymd DIPIN ke 2.0.0 (bukan 1.2.0) - API-nya berbeda cukup jauh
+# (MDButton, MDNavigationBar/MDNavigationItem, MDTextField semua
+# pakai pola composite widget di 2.0.0) dan seluruh screens/ di
+# proyek ini SUDAH DITES sungguhan terhadap versi 2.0.0. Jangan
+# downgrade ke 1.2.0 tanpa menulis ulang screens/login.py dan
+# screens/dashboard.py.
+#
+# Versi Android (buildozer.spec) punya daftar requirements terpisah
+# karena nama recipe python-for-android berbeda dari nama paket PyPI
+# untuk sebagian dependency (lihat komentar di buildozer.spec).
+
+kivy==2.3.1
+kivymd==2.0.0
+opencv-contrib-python==4.9.0.80
+numpy==1.26.4
+pillow==10.3.0

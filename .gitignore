@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+app_data/
+.buildozer/
+bin/
+*.apk
+*.db
+dataset/*
+!dataset/.gitkeep
+models/*
+!models/.gitkeep
