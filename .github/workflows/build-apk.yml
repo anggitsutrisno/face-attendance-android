@@ -1,20 +1,5 @@
 name: Build Android APK
 
-# Berjalan di runner Ubuntu milik GitHub (akses internet penuh, tidak
-# ada pembatasan domain seperti sandbox tempat proyek ini ditulis) -
-# ini cara paling praktis menjalankan buildozer tanpa perlu WSL2/VM
-# sendiri, karena Windows/Laragon tidak bisa menjalankan buildozer
-# secara native (lihat README bagian PHASE 15).
-#
-# Cara pakai:
-# 1. Push seluruh folder face_attendance_android/ ini ke repo GitHub.
-# 2. Buka tab "Actions" di repo -> workflow ini otomatis jalan setiap
-#    push ke branch main/master, atau jalankan manual lewat
-#    "Run workflow" (workflow_dispatch).
-# 3. Setelah selesai (bisa 30-90 menit di run PERTAMA karena compile
-#    OpenCV dari source), unduh APK dari bagian "Artifacts" di
-#    halaman run tersebut.
-
 on:
   push:
     branches: [main, master]
@@ -22,13 +7,11 @@ on:
 
 jobs:
   build-apk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+
     env:
-      # Runner ubuntu-latest terbaru memakai Python dengan PEP 668
-      # (externally-managed-environment) - ini env var yang sama
-      # dipakai untuk mengatasi bug #2 di README PHASE 15, diset di
-      # level job supaya berlaku untuk SEMUA langkah pip install.
       PIP_BREAK_SYSTEM_PACKAGES: "1"
+
     steps:
       - name: Checkout kode
         uses: actions/checkout@v4
@@ -43,9 +26,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
-          # actions/setup-java otomatis mengatur JAVA_HOME dengan benar
-          # ke JDK (bukan JRE) - ini yang gagal di sandbox pengembangan
-          # (lihat bug #1 di README PHASE 15).
 
       - name: Cache buildozer & pip
         uses: actions/cache@v4
@@ -54,20 +34,33 @@ jobs:
             ~/.buildozer
             ~/.cache/pip
             .buildozer
-          # Cache di-invalidate otomatis kalau buildozer.spec berubah,
-          # supaya perubahan requirements/versi selalu dipakai ulang.
-          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-ubuntu22-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-${{ runner.os }}-
+            buildozer-ubuntu22-
 
       - name: Install dependency sistem
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool \
-            pkg-config zlib1g-dev ant
+          sudo apt install -y \
+            git \
+            zip \
+            unzip \
+            openjdk-17-jdk \
+            autoconf \
+            automake \
+            autopoint \
+            libtool \
+            libltdl-dev \
+            libffi-dev \
+            pkg-config \
+            zlib1g-dev \
+            ant \
+            cmake \
+            build-essential
 
       - name: Install buildozer & cython
-        run: pip install --user buildozer==1.6.0 cython
+        run: |
+          pip install --user buildozer==1.6.0 cython
 
       - name: Build APK debug
         run: |
