@@ -58,9 +58,29 @@ jobs:
             ~/.buildozer
             ~/.cache/pip
             .buildozer
-          key: buildozer-ubuntu22-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-ubuntu22-v3-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-ubuntu22-
+            buildozer-ubuntu22-v3-
+
+      - name: Validate dan bersihkan Android SDK jika rusak
+        shell: bash
+        run: |
+          export ANDROID_HOME="$HOME/.buildozer/android/platform/android-sdk"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+
+          echo "Checking Android SDK integrity..."
+
+          if [ ! -d "$ANDROID_HOME/build-tools" ]; then
+            echo "⚠️ build-tools folder tidak ditemukan, menghapus SDK cache..."
+            rm -rf "$ANDROID_HOME"
+          else
+            if ! find "$ANDROID_HOME/build-tools" -type f -name "aidl" 2>/dev/null | grep -q .; then
+              echo "⚠️ aidl tool tidak ditemukan, menghapus SDK cache..."
+              rm -rf "$ANDROID_HOME"
+            else
+              echo "✅ Android SDK looks good"
+            fi
+          fi
 
       - name: Build APK debug
         shell: bash
