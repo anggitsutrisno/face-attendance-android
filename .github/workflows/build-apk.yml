@@ -27,34 +27,13 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK components
-        run: |
-          sdkmanager --install "platform-tools" "platforms;android-33" "build-tools;34.0.0"
-          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
-
-      - name: Cache buildozer & pip
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.buildozer
-            ~/.cache/pip
-            .buildozer
-          key: buildozer-ubuntu22-${{ hashFiles('buildozer.spec') }}
-          restore-keys: |
-            buildozer-ubuntu22-
-
       - name: Install dependency sistem
         run: |
-          sudo apt update
-          sudo apt install -y \
+          sudo apt-get update
+          sudo apt-get install -y \
             git \
             zip \
             unzip \
-            openjdk-17-jdk \
             autoconf \
             automake \
             autopoint \
@@ -69,10 +48,32 @@ jobs:
 
       - name: Install buildozer & cython
         run: |
-          pip install --user buildozer==1.6.0 cython
+          python -m pip install --upgrade pip
+          python -m pip install --user buildozer==1.6.0 cython==0.29.36
+
+      - name: Cache buildozer & pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer
+            ~/.cache/pip
+            .buildozer
+          key: buildozer-ubuntu22-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            buildozer-ubuntu22-
 
       - name: Build APK debug
+        shell: bash
         run: |
+          set -o pipefail
+          export PATH="$HOME/.local/bin:$PATH"
+
+          export ANDROID_HOME="$HOME/.buildozer/android/platform/android-sdk"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+
+          mkdir -p "$HOME/.android"
+          touch "$HOME/.android/repositories.cfg"
+
           for attempt in 1 2 3; do
             echo "========================================"
             echo "Build attempt: $attempt / 3"
