@@ -9,7 +9,7 @@ source.include_exts = py,png,jpg,jpg,kv,atlas,xml,yml,db
 
 version = 0.1.0
 
-requirements = python3,kivy==2.3.1,kivymd==2.0.0,opencv,opencv_extras,numpy,pillow
+requirements = python3,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/refs/tags/2.0.0.zip,materialyoucolor==3.0.3,materialshapes,pycairo,pillow,exceptiongroup,asyncgui,asynckivy,android,opencv,opencv_extras,numpy
 
 # Pin python-for-android
 # Menghindari build menggunakan Python 3.14
