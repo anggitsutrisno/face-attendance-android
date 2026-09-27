@@ -61,7 +61,6 @@ android.allow_backup = True
 # berguna kalau jaringan tempat build berjalan tidak bisa akses domain
 # itu (ditemukan nyata saat pengujian Phase 15 di sandbox ini). Hapus
 # baris ini kalau ingin buildozer download Ant sendiri seperti biasa.
-android.ant_path = /opt/ant-system
 
 [buildozer]
 log_level = 2
