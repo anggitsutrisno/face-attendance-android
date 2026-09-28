@@ -10,7 +10,7 @@ source.include_exts = py,png,jpg,jpg,kv,atlas,xml,yml,db
 version = 0.1.0
 
 # buildozer.spec line 12
-requirements = python3,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/refs/tags/2.0.0.zip,materialyoucolor==3.0.3,materialshapes==0.1,pycairo,pillow,exceptiongroup,asyncgui,asynckivy,android,opencv,numpy
+requirements = python3,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/refs/tags/2.0.0.zip,materialyoucolor==3.0.3,materialshapes==0.3,pycairo,pillow,exceptiongroup,asyncgui,asynckivy,android,opencv,numpy
 # Pin python-for-android
 # Menghindari build menggunakan Python 3.14
 p4a.branch = master
